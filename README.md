@@ -8,8 +8,11 @@ A deep convolutional generative adversarial network (DCGAN) is trained on pictur
 ## Pre-trained Models
 Thin-Film Interference on the surface of a bubble - `bubble_train.py`
 
-![](artificialart_digital_dreams_bubble.gif)
+Video: https://www.reddit.com/r/generative/comments/gfv2gj/latent_explorations_thinfilm_inference_on_bubbles/
 
+64 x 64 images from a latent space of 256 dimensions after 50000 training epochs
+
+![](bubble64_mosaic.png)
 
 ## Train your own model
 1. Download your favorite images to a new directory
