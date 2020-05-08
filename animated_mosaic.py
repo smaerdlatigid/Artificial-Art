@@ -22,13 +22,13 @@ def create_image(gen_imgs, name, xsize=4, ysize=4):
 if __name__ == "__main__":
 
     # make sure to load in the correct sized data
-    dcgan = DCGAN(img_rows = 128,
-                    img_cols = 128,
+    dcgan = DCGAN(img_rows = 64,
+                    img_cols = 64,
                     channels = 3, 
                     latent_dim=256,
-                    name='goodsell_256_128')
+                    name='bubble')
     
-    dcgan.load_weights(generator_file="generator ({})4000.h5".format(dcgan.name), discriminator_file="discriminator ({}).h5".format(dcgan.name))
+    dcgan.load_weights(generator_file="generator ({}).h5".format(dcgan.name), discriminator_file="discriminator ({}).h5".format(dcgan.name))
 
     # starting point for every image
     seed_start = np.random.normal(0, 1, (16, dcgan.latent_dim))

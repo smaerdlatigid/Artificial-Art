@@ -10,7 +10,7 @@ import matplotlib.animation as anim
 from skimage.transform import rotate 
 from skimage.color import rgb2hsv, hsv2rgb
 
-import twitter
+#import twitter
 
 class AnimatedGif:
     def __init__(self, size=(512, 512)):
@@ -53,16 +53,21 @@ def create_image(gen_imgs, name, xsize=4, ysize=4):
     plt.close()
 
 
-def make_post():
+def make_post(savefile=None):
     # make sure to load in the correct sized data
-    dcgan = DCGAN(img_rows = 128,
-                    img_cols = 128,
+    dcgan = DCGAN(img_rows = 64,
+                    img_cols = 64,
                     channels = 3, 
-                    latent_dim=512,
-                    name='goodsell_512_128')
-    
-    dcgan.load_weights(generator_file="generator ({}).h5".format(dcgan.name), discriminator_file="discriminator ({}).h5".format(dcgan.name))
-    
+                    latent_dim=256,
+                    name='bubble')
+    try:
+        dcgan.load_weights(
+            generator_file="generator ({}).h5".format(dcgan.name), 
+            #discriminator_file="discriminator ({}).h5".format(dcgan.name) 
+        )
+    except Exception as e:
+        print("failed to load weights:",e)
+
     # video settings
     fps = 30
     maxTime = 30 # seconds
@@ -71,7 +76,7 @@ def make_post():
     nframes = int( maxTime*fps )
 
     # controls for animation
-    seed_start = np.random.normal(1, 1, (16, dcgan.latent_dim))
+    seed_start = np.random.normal(0, 0.5, (16, dcgan.latent_dim))
     latentSpeed = np.random.normal(2, 1, (16, dcgan.latent_dim))
     vary = np.random.normal(1, 1, (16, nframes, dcgan.latent_dim)) 
 
@@ -89,7 +94,7 @@ def make_post():
             
             # change the latent variables
             for j in range(dcgan.latent_dim):
-                vary[k][i][j] = seed_start[k][j] + np.sin( 2*np.pi*(time/maxTime) * latentSpeed[k][j] ) 
+                vary[k][i][j] = seed_start[k][j] + 0.5*np.sin( 2*np.pi*(time/maxTime) * latentSpeed[k][j] ) 
 
             time += 1./fps
 
@@ -106,8 +111,12 @@ def make_post():
         
         animated_gif.add(imgs[:,i])
 
-    animated_gif.save('artificial_art.mp4',fps=fps)
+    if savefile:
+        animated_gif.save(savefile,fps=fps)
+    else:
+        animated_gif.save('artificial_art.mp4',fps=fps)
 
+    return
     dude() 
 
     count = np.loadtxt('count.txt')
@@ -141,5 +150,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     #while(True):
-    make_post() 
+    for i in range(10):
+        print(i)
+        make_post("bubble_{}.mp4".format(i)) 
         #time.sleep(args.sleep)

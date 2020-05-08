@@ -81,7 +81,7 @@ class DCGAN():
 
         if generator_file or discriminator_file: 
             self.build_combined() 
-            print('build compaied ')
+            print('build combined ')
 
     def build_generator(self):
 
@@ -90,7 +90,7 @@ class DCGAN():
         #model.add(Dropout(0.1))
         
         model.add(Dense(128 * 16 * 16, activation="relu", input_dim=self.latent_dim, name="generator_input") )
-        model.add(Dropout(0.3))
+        model.add(Dropout(0.35))
         model.add(Reshape((16, 16, 128)))
         #model.add(UpSampling2D())
 
@@ -221,9 +221,9 @@ class DCGAN():
                 cnt += 1
 
         if name:
-            fig.savefig(name, facecolor='black' )
+            fig.savefig(name, facecolor='white' )
         else: 
-            fig.savefig('{}.png'.format(self.name), facecolor='black' )
+            fig.savefig('{}.png'.format(self.name), facecolor='white' )
 
         plt.close()
     
@@ -259,7 +259,7 @@ def export_model(saver, model, model_name, input_node_names, output_node_name):
 
 
 
-def create_dataset(xSize=128, ySize=128, nSlices=100, resize=0.75, directory='dataset/'):
+def create_dataset(xSize=128, ySize=128, nSlices=100, resize=0.75, rotations=10, directory='dataset/'):
     jpgs = glob.glob( '{}*.jpg'.format(directory) )
     pngs = glob.glob( '{}*.png'.format(directory) )
 
@@ -272,6 +272,8 @@ def create_dataset(xSize=128, ySize=128, nSlices=100, resize=0.75, directory='da
 
         # load image
         img = Image.open(allimages[i])
+
+        # rotate image for more variation
 
         if resize != 1:
             img.thumbnail((img.size[0]*resize, img.size[1]*resize), Image.LANCZOS) # resizes image in-place
